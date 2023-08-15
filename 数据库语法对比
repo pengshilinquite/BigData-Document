@@ -1,1 +1,19 @@
-presto 和 hive 语法对比
+**presto和 hive 语法对比**
+
+--hive
+select a from (select 1 as a) tmp
+--presto
+select a from (select 1 as a)
+
+
+--关于时间加减的函数
+--hive
+select from_unixtime(unix_timestamp()+28800,'yyyy-MM-dd HH:mm:ss') -- 时间往当前日期加8h
+select date_add(from_unixtime(unix_timestamp(),'yyyy-MM-dd HH:mm:ss'),1)  --时间往前加一天 （不带分秒）
+select date_sub('2023-08-15',1)                      --时间往减一天 
+select add_months('2023-08-01', 2)                    --时间增加2个月
+select add_months('2023-08-01', 12)                    --时间1年
+
+--关于时间
+
+
