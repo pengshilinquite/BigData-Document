@@ -1,0 +1,77 @@
+**presto和 hive 语法对比**
+
+======================hive
+select a from (select 1 as a) tmp
+======================presto
+select a from (select 1 as a)
+
+-------------------------------------------------------------------时间往当前日期加8h
+======================hive
+======================presto
+======================impala
+======================clickhouse
+======================hana
+======================postgre
+======================doris
+======================Oracle
+======================mysql
+
+-------------------------------------------------------------------时间往当前日期加8h
+======================hive
+select from_unixtime(unix_timestamp()+28800,'yyyy-MM-dd HH:mm:ss') 
+======================presto
+select format_datetime(now() + interval '8' hour , 'yyyy-MM-dd HH:mm:ss')
+======================impala
+select date_format(date_add(now(), interval 8 hours), 'yyyy-MM-dd hh:mm:ss')
+======================clickhouse
+select formatdatetime(now() + tointervalhour(8), 'yyyy-MM-dd HH:mm:ss')
+======================hana
+select TO_NVARCHAR(CURRENT_TIMESTAMP + interval '8' hour, 'yyyy-MM-dd HH:mm:ss') from dummy;
+======================postgre
+SELECT CURRENT_TIMESTAMP + INTERVAL '8 hours'
+======================Oracle
+select to_char(sysdate + interval '8' hour, 'yyyy-MM-dd HH:mm:ss') from dual;
+======================mysql
+SELECT DATE_FORMAT(NOW() + INTERVAL 8 HOUR, '%Y-%m-%d %H:%i:%s')
+======================doris
+SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 8 HOUR), '%Y-%m-%d %H:%i:%s') 
+
+-------------------------------------------------------------------时间加减函数
+======================hive
+SELECT DATE_ADD('2023-08-14', 1) 
+======================presto
+SELECT DATE_ADD(DATE '2023-08-14', INTERVAL 1 DAY) 
+======================impala
+SELECT DATE_ADD('2023-08-14', INTERVAL 1 DAY) AS added_date;
+======================clickhouse
+SELECT toDate('2023-08-14') + INTERVAL 1 DAY AS added_date;
+======================hana
+SELECT ADD_DAYS(CURRENT_DATE, 1)  FROM DUMMY;
+======================postgre
+SELECT '2023-08-14'::DATE + INTERVAL '1 DAY' 
+======================Oracle
+SELECT DATE '2023-08-14' + 1 AS added_date FROM DUAL;
+======================mysql
+SELECT DATE_ADD('2023-08-14', INTERVAL 1 DAY) 
+======================doris
+SELECT DATE_ADD('2023-08-14', INTERVAL 1 DAY) 
+
+
+
+select add_months('2023-08-01', 2)                    --时间增加2个月
+select add_months('2023-08-01', 12)                    --时间1年
+
+--关于获取时间的函数
+======================hive
+select weekofyear(cast('2023-06-29' as date))      --26
+代替dayofweek 函数
+select case when pmod(datediff(current_date(),'1970-01-01')-3,7) = 0 then 7 
+            else pmod(datediff(current_date(),'1970-01-01')-3,7) end
+代替dayofyear 函数
+select date_diff('2023-06-29','2023-01-01')              --179
+select dayofmonth(cast('2023-06-29' as date))            --29
+selecct day(cast('2023-06-29' as date))                  --29
+selecct month(cast('2023-06-29' as date))                --6
+select lpad(month(cast('2023-06-29' as date)), 2, '0')   --06
+selecct year(cast('2023-06-29' as date))                 --2023
+
