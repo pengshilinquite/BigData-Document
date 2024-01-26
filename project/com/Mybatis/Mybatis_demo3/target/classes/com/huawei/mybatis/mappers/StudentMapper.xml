@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.mybatis.mappers.StudentMapper">
+    <!--resultMap 字段映射关系-->
+<!--    <resultMap id="studentResultMap" type="Student">-->
+<!--        <id property="sid" column="sid"></id>-->
+<!--        <result property="studentName" column="studentName"></result>-->
+<!--        <result property="studentAge" column="studentAge"></result>-->
+<!--        <result property="studentScore" column="studentScore"></result>-->
+<!--        <result property="studentClass" column="studentClass"></result>-->
+
+<!--    </resultMap>-->
+    <select id="selectAllStudent" resultType="Student">
+        select sid,studentName studentName,studentAge,studentScore,studentClass from dm_fin.dm_fin_student_h_f
+    </select>
+
+
+    <select id="getStudent" resultMap="studentAndClassResultOne">
+        select sid,studentName studentName,studentAge,studentScore,studentClass,c.cid,c.className from dm_fin.dm_fin_student_h_f s
+        left join dm_fin.dm_fin_class_h_f c on s.sid = c.cid where s.sid = #{sid}
+    </select>
+
+    <resultMap id="studentAndClassResultOne" type="Student">
+        <id property="sid" column="sid"></id>
+        <result property="studentName" column="studentName"></result>
+        <result property="studentAge" column="studentAge"></result>
+        <result property="studentScore" column="studentScore"></result>
+        <result property="studentClass" column="studentClass"></result>
+        <result property="aClass.cid" column="cid"></result>
+        <result property="aClass.ClassName" column="ClassName"></result>
+    </resultMap>
+
+
+
+    <select id="getStudentClassByStepOne" resultMap="studentAndClassResultMap">
+        select * from  dm_fin.dm_fin_student_h_f where sid = #{sid}
+    </select>
+    <resultMap id="studentAndClassResultMap" type="Student">
+        <id property="sid" column="sid"></id>
+        <result property="studentName" column="studentName"></result>
+        <result property="studentAge" column="studentAge"></result>
+        <result property="studentScore" column="studentScore"></result>
+        <result property="studentClass" column="studentClass"></result>
+        <association property="aClass"
+                     select="com.huawei.mybatis.mappers.ClassMapper.getClassByStepTwo"
+                     column="studentClass"
+                     fetchType="eager"
+        >
+        </association>
+    </resultMap>
+
+
+    <select id="getStudentByStepOne" resultType="Student">
+        select * from dm_fin.dm_fin_student_h_f where sid = #{sid}
+    </select>
+
+</mapper>
+
+

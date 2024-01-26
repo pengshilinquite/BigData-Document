@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.mybatis_practise.mappers.UserMapper">
+
+    <select id="selectAllUser" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f
+    </select>
+    <select id="selectUser" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f where empno = '${arg0}' and ename = #{arg1}
+    </select>
+
+    <select id="selectMapUser" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f where empno = '${empno}' and ename = #{ename}
+    </select>
+
+    <insert id="insertUser">
+        insert into dm_fin.dm_fin_emp_h_f values(#{empno},#{ename},#{job},#{mgr},#{hiredate},#{sal},#{comm},#{deptno});
+    </insert>
+
+    <select id="selectUserParam" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f where empno = '${empno}' and ename = #{ename}
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(1) from dm_fin.dm_fin_emp_h_f
+    </select>
+
+    <select id="selectUserParaToMap" resultType="Map">
+        select * from dm_fin.dm_fin_emp_h_f
+    </select>
+
+
+    <select id="selectByLike" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f where ename like '%${ename}%'
+
+        <!--    下面这种拼接的方式也行
+             select * from dm_fin.dm_fin_emp_h_f where ename like concat('%',#{ename},'%')
+             -->
+
+        <!--    下面这种是使用最多的
+            select * from dm_fin.dm_fin_emp_h_f where ename like "%"#{ename}"%"
+            -->
+
+    </select>
+
+    <delete id="deleteIn">
+        delete from dm_fin.dm_fin_emp_h_f where empno in (${empno})
+    </delete>
+
+    <select id="getUerByTableName" resultType="User">
+        select * from ${tablename}
+    </select>
+</mapper>
+
+

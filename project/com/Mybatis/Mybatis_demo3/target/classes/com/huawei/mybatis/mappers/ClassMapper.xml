@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.mybatis.mappers.ClassMapper">
+
+    <select id="getClassByStepTwo" resultType="Class">
+        select * from dm_fin.dm_fin_class_h_f where cid = #{cid}
+    </select>
+
+    <select id="getClass" resultMap="getClassResultMap">
+        select * from dm_fin.dm_fin_class_h_f class
+        left join dm_fin.dm_fin_student_h_f student
+        on class.cid = student.sid
+        where class.cid = #{cid}
+    </select>
+    <resultMap id="getClassResultMap" type="Class">
+        <id property="cid" column="cid"></id>
+        <result property="ClassName" column="ClassName"></result>
+        <collection property="students" ofType="Student">
+            <id property="sid" column="sid"></id>
+            <result property="studentName" column="studentName"></result>
+            <result property="studentAge" column="studentAge"></result>
+            <result property="studentScore" column="studentScore"></result>
+            <result property="studentClass" column="studentClass"></result>
+        </collection>
+    </resultMap>
+
+
+
+    <select id="getStudentByStepOne" resultMap="getStudentByStepOneResultMap">
+        select * from dm_fin.dm_fin_class_h_f where cid = #{cid}
+    </select>
+    <resultMap id="getStudentByStepOneResultMap" type="Class">
+        <id property="cid" column="cid"></id>
+        <result property="ClassName" column="ClassName"></result>
+        <collection property="students"
+                    select="com.huawei.mybatis.mappers.StudentMapper.getStudentByStepOne"
+                    column="cid"
+                    fetchType="eager">
+
+        </collection>
+
+    </resultMap>
+    
+
+
+
+
+
+</mapper>
+
+

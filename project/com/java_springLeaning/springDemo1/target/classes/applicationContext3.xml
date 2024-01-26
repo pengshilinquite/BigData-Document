@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="studentController" class="com.controller.StudentController" autowire="byName">
+<!--        <property name="studentService" ref="studentServiceImp"></property>-->
+    </bean>
+    <bean id="studentService" class="com.service.impl.StudentServiceImp" autowire="byName">
+<!--        <property name="studentDao" ref="studnetDaoImpl"></property>-->
+    </bean>
+    <bean id="studentDao" class="com.dao.impl.StudentDaoImpl" autowire="byName"></bean>
+</beans>

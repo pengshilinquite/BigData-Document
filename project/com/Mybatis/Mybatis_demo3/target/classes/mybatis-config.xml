@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 1.properties属性引入外部配置文件 -->
+    <properties resource="mybatis.properties">
+    </properties>
+    
+    <settings>
+        <!--开启驼峰命名规则-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--开启懒加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--关闭实时加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <!-- 3.实体类别名设置 -->
+    <typeAliases>
+        <package name="com.huawei.mybatis.popj"/>
+    </typeAliases>
+
+
+    <!-- 7.environments数据库环境配置 -->
+    <!-- 和Spring整合后environments配置将被废除 -->
+    <environments default="development">
+        <environment id="development">
+            <!-- 使用JDBC事务管理 -->
+            <transactionManager type="JDBC"/>
+            <!-- 数据库连接池 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 8.加载映射文件 -->
+    <mappers>
+        <package name="com.huawei.mybatis.mappers"/>
+
+        
+    </mappers>
+</configuration>

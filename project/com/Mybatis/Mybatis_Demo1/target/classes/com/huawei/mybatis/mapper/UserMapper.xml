@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.mybatis.mapper.UserMapper">
+    <insert id="insertUser">
+        insert into dm_fin.dm_fin_emp_h_f values(8888,'peng','CLERK',7782,'1996-12-03',1300,null,10)
+    </insert>
+    <update id="updateUser">
+        update dm_fin.dm_fin_emp_h_f set sal = '3500' where empno = 8888
+    </update>
+<!--  查询功能必须设置resultType 或者resultMap
+    resultType:设置默认的映射关系
+    resultMap:设置自定义的映射关系
+-->
+    <select id="selectUser" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f where empno = 8888
+    </select>
+
+    <select id="selectAllUser" resultType="User">
+        select * from dm_fin.dm_fin_emp_h_f
+    </select>
+</mapper>

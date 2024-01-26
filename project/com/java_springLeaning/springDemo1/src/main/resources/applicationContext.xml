@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="student" class="com.popj.Student">
+        <property name="sid" value="1"></property>
+        <property name="sname" value="zhangsam"></property>
+        <property name="sbirth" value="2011-04-06"></property>
+        <property name="ssex" value="男"></property>
+
+<!--       这种方法类似于mybatis中的级联关系，但是与mybatis 不同的是， 这个需要先对对象进行赋值或者实例化
+        <property name="course.tid" value="1" ></property>
+        <property name="course.cname" value="数学" ></property>
+        <property name="course.cid" value="1" ></property>-->
+
+<!--            内部bean-->
+<!--        <property name="course">-->
+<!--            <bean id="course" class="com.popj.Course">-->
+<!--                <property name="cid" value="1"></property>-->
+<!--                <property name="cname" value="数学"></property>-->
+<!--                <property name="tid" value="1"></property>-->
+<!--            </bean>-->
+<!--        </property>-->
+
+
+        <property name="course" ref="course"></property>
+    </bean>
+
+    <bean id="course" class="com.popj.Course">
+        <property name="cid" value="1"></property>
+        <property name="cname" value="数学"></property>
+        <property name="tid" value="1"></property>
+    </bean>
+    <bean id="course2" class="com.popj.Course">
+        <property name="cid" value="1"></property>
+        <property name="cname" value="数学"></property>
+        <property name="tid" value="1"></property>
+    </bean>
+
+
+<!--    集合和数组怎么赋值-->
+    <bean id="testList" class="com.popj.TestList">
+        <property name="str">
+            <array>
+                <value>zhangsan</value>
+                <value>lisi</value>
+                <value>wangwu</value>
+            </array>
+        </property>
+
+        <property name="list">
+            <list>
+                <ref bean="course"></ref>
+                <ref bean="course2"></ref>
+            </list>
+        </property>
+
+<!--           集合的第二种方法-->
+        <property name="list2" ref="list2Course"></property>
+
+        <property name="courseMap">
+            <map>
+                <entry key="1" value-ref="course"></entry>
+                <entry key="2" value-ref="course2"></entry>
+            </map>
+        </property>
+
+        <property name="courseMap2" ref="mapCourse2"></property>
+            </bean>
+
+<!--    用p命名空间-->
+    <bean id="testList" class="com.popj.TestList" p:str="1" p:courseMap-ref="mapCourse2" ></bean>
+
+    <util:list id="list2Course">
+        <ref bean="course"></ref>
+        <ref bean="course2"></ref>
+    </util:list>
+
+    <util:map id="mapCourse2">
+        <entry key="1" value-ref="course"></entry>
+        <entry key="2" value-ref="course2"></entry>
+    </util:map>
+
+</beans>

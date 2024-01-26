@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.huawei.spring">
+<!--&lt;!&ndash;        通过注解来排除扫描&ndash;&gt;-->
+<!--        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+<!--&lt;!&ndash;        通过标签来排除扫描，可以通过类名进行排除&ndash;&gt;-->
+<!--        <context:exclude-filter type="assignable" expression="com.huawei.spring.controller.StudentController"/>-->
+
+    </context:component-scan>
+<!--            base-package="com.huawei.spring.controller,com.huawei.spring.service.impl,com.huawei.spring.dao"></context:component-scan>-->
+    <bean id="Controller" class="com.huawei.spring.controller.StudentController"></bean>
+    <bean id="server" class="com.huawei.spring.service.impl.StudentServiceImpl"></bean>
+    <bean id="dao" class="com.huawei.spring.dao.impl.StudentDaoImpl"></bean>
+</beans>

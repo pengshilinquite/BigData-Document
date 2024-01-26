@@ -1,0 +1,2 @@
+
+        String s1Replace = s1.replaceAll(" ", "");
