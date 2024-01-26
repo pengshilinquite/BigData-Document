@@ -1,0 +1,115 @@
+package com.waterMark;
+
+import PoPj.Event;
+import com.modle.UrlViewCount;
+import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.util.Collector;
+import org.apache.flink.util.OutputTag;
+
+
+import java.time.Duration;
+import java.util.Random;
+
+/**
+ * @author peng
+ * @date 2023/5/22 20:38
+ */
+public class WindowLater {
+
+
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
+        DataStreamSource<Event> eventDataStreamSource = env.addSource(new SourceFunction<Event>() {
+            String [] users = {"Mary"};
+            String [] urls = {"./home"};
+            int [] num = {1,2,3,4,5,6,7,8,9};
+            Random random = new Random();
+            boolean run = true;
+            @Override
+            public void run(SourceContext<Event> sourceContext) throws Exception {
+                int i = 0;
+                while (i<num.length){
+                    sourceContext.collect(new Event(
+                            users[random.nextInt(users.length)],
+                            urls[random.nextInt(urls.length)],
+                            10000L-num[i]*1000
+
+
+
+                    ));
+                    Thread.sleep(1000);
+                    i++;
+                }
+            }
+
+
+            @Override
+            public void cancel() {
+                run = false;
+            }
+        });
+        SingleOutputStreamOperator<Event> eventWaterMark = eventDataStreamSource.assignTimestampsAndWatermarks(WatermarkStrategy.<Event>forBoundedOutOfOrderness(
+                Duration.ofSeconds(2)
+                ).withTimestampAssigner(new SerializableTimestampAssigner<Event>() {
+                    @Override
+                    public long extractTimestamp(Event event, long l) {
+                        return event.timestamp;
+                    }
+                })
+        );
+        //OutputTag<Event> later = new OutputTag<Event>("later"){};
+        SingleOutputStreamOperator<UrlViewCount> streamOperator = eventWaterMark.keyBy(data -> data.url)
+                .window(TumblingEventTimeWindows.of(Time.seconds(3)))
+                //.allowedLateness(Time.seconds(1))
+                //.sideOutputLateData(later)
+                .aggregate(new CountAgg(), new CountResultProce());
+        streamOperator.print("first");
+        //streamOperator.getSideOutput(later).print("later");
+        env.execute();
+    }
+
+
+
+    private static class CountAgg implements AggregateFunction<Event,Long,Long> {
+        @Override
+        public Long createAccumulator() {
+            return 0L;
+        }
+
+        @Override
+        public Long add(Event event, Long aLong) {
+            return aLong+1;
+        }
+
+        @Override
+        public Long getResult(Long aLong) {
+            return aLong;
+        }
+
+        @Override
+        public Long merge(Long aLong, Long acc1) {
+            return null;
+        }
+    }
+
+    private static class CountResultProce extends ProcessWindowFunction<Long, UrlViewCount, String, TimeWindow> {
+        @Override
+        public void process(String url, Context context, Iterable<Long> iterable, Collector<UrlViewCount> collector) throws Exception {
+            long start = context.window().getStart();
+            long end = context.window().getEnd();
+            long count = iterable.iterator().next();
+            collector.collect(new UrlViewCount(url,count,start,end));
+        }
+    }
+}

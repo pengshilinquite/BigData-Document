@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="test_datastream-1.0-SNAPSHOT-jar-with-dependencies">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../test_datastream-1.0-SNAPSHOT-jar-with-dependencies.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../test_datastream-1.0-SNAPSHOT-jar-with-dependencies.jar!/" />
+    </SOURCES>
+  </library>
+</component>
