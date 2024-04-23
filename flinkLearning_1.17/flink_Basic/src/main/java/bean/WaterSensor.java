@@ -7,9 +7,9 @@ import java.util.Objects;
  * @date 2024/4/7 15:05
  */
 public class WaterSensor {
-    private String id;
-    private Long ts;
-    private Integer vc;
+    public String id;
+    public Long ts;
+    public Integer vc;
 
     public WaterSensor() {
     }
